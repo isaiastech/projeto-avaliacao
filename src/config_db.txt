@@ -1,0 +1,5 @@
+$host = 'db';
+$porta = 3306;
+$dbname = 'sistema_avaliacao';
+$user = 'root';
+$pass = 'root';

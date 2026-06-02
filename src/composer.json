@@ -1,0 +1,17 @@
+{
+    "name": "isaiastech/src",
+    "autoload": {
+        "psr-4": {
+            "class\\": "class/"
+        }
+    },
+    "authors": [
+        {
+            "name": "isaias"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "phpmailer/phpmailer": "^7.1"
+    }
+}

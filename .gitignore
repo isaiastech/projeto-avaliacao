@@ -1,0 +1,57 @@
+# Dependências do Composer
+/vendor/
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+env.ini
+
+# Logs
+*.log
+logs/
+storage/logs/
+
+# Cache
+cache/
+tmp/
+temp/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Configurações do VS Code
+.vscode/
+
+# Configurações do PHPStorm
+.idea/
+
+# Arquivos de sessão
+*.sess
+
+# Arquivos de backup
+*.bak
+*.sql
+*.zip
+*.tar.gz
+
+# Arquivos temporários
+*.tmp
+
+# PHPUnit
+.phpunit.result.cache
+
+# Composer
+composer.phar
+
+# Node.js (caso utilize futuramente)
+node_modules/
+
+# Arquivos de upload
+uploads/
+public/uploads/
+
+# Arquivos de configuração local
+config.local.php
+database.local.php

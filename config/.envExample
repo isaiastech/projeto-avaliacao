@@ -1,0 +1,13 @@
+host=db
+username=
+password=
+database=
+
+mail_host=smtp
+mail_username=
+mail_password=
+mail_port=587
+mail_encryption=tls
+mail_from=
+mail_from_name=App Avaliação
+
