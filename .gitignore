@@ -6,7 +6,7 @@
 .env.local
 .env.*.local
 env.ini
-
+src/config_db.txt
 # Logs
 *.log
 logs/
