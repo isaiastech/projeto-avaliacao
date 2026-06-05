@@ -33,7 +33,10 @@ use class\data\Database;
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <style>
+<style>
+        body{
+          background:#f4f6f9;
+         }
         footer.bg-body-tertiary {
             position: relative;
             bottom: 0;
@@ -47,20 +50,45 @@ use class\data\Database;
         footer p {
             margin: 0;
         }
-    </style>
+        .sidebar{
+            min-height:100vh;
+            background:#fff;
+            box-shadow:0 0 15px rgba(0,0,0,.08);
+        }
+        .sidebar .nav-link{
+          color:#444;
+          border-radius:8px;
+          margin-bottom:4px;
+          transition:.3s;
+        }
+
+        .sidebar .nav-link:hover{
+            background:#250352;
+            color:#fff;
+        }
+</style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-md" style="background-color: #250352; color: #fff">
-        <a class="navbar-brand" href="#" style="text-decoration: none;color: #fff">
-            <img src="/../images/image-painel.png" width="50px" height="50px">
-            Bem vindo: <?php echo $_SESSION['nome']; ?>
-        </a>
-        <li class="nav-item">
-          <a class="nav-link" href="/views/perfil.php">
-             Atualizar Meu Perfil
-          </a>
-        </li>
+        <div class="d-flex align-items-center">
+          <img src="/../images/image-painel.png" class="rounded-circle shadow-sm" width="50" height="50">
+        <div class="ml-3">
+          <div class="font-weight-bold text-white">
+                  Olá, <?= htmlspecialchars($_SESSION['nome']) ?>
+          </div>
+            <small class="text-light">
+              Sistema de Avaliação
+           </small>
+          </div>
+        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+              <a class="nav-link text-white" href="/views/perfil.php">
+                  Atualizar Meu Perfil
+              </a>
+          </li>
+        </ul>
         <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
         </button>

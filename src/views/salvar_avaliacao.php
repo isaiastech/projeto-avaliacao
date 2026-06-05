@@ -44,9 +44,10 @@ try {
     // =====================================================
 
     $sql = "
-        SELECT COUNT(*) AS total
-        FROM questoes
-    ";
+    SELECT COUNT(*) AS total
+    FROM questoes
+    WHERE ativo = 1
+  ";
 
     $totalQuestoes = $db->getResultFromQuery($sql)
         ->fetch_assoc()['total'];
@@ -64,8 +65,9 @@ try {
     // =====================================================
 
     $sql = "
-        SELECT id
-        FROM questoes
+    SELECT id
+    FROM questoes
+    WHERE ativo = 1
     ";
 
     $resultQuestoes = $db->getResultFromQuery($sql);
