@@ -330,7 +330,7 @@ if (
 
             // Busca questões
             $questoes = $db->getResultFromQuery(
-                "SELECT * FROM questoes ORDER BY id"
+                "SELECT * FROM questoes WHERE ativo = 1 ORDER BY id"
             );
 ?>
 

@@ -109,9 +109,12 @@ if (isset($_GET['excluir'])) {
         $id = (int) $_GET['excluir'];
 
         $sql = "
-            DELETE FROM questoes
-            WHERE id = ?
-        ";
+              UPDATE questoes
+              SET ativo = 0
+              WHERE id = ?
+          ";
+
+$db->execute($sql, [$id]);
 
         $db->execute($sql, [$id]);
 
@@ -149,7 +152,10 @@ if (isset($_GET['editar'])) {
 |--------------------------------------------------------------------------
 */
 $questoes = $db->getResultFromQuery(
-    "SELECT * FROM questoes ORDER BY id"
+    "SELECT *
+     FROM questoes
+     WHERE ativo = 1
+     ORDER BY id"
 );
 
 ?>
