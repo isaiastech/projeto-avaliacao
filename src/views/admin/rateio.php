@@ -77,18 +77,14 @@ $valorTotal = (float) $valorTotal;
         $somaMedias += (float) $row['media'];
     }
 
-    foreach ($dados as &$item) {
+    foreach ($dados as $key => $item) {
 
-        $percentual =
-            ($item['media'] / $somaMedias) * 100;
+    $dados[$key]['percentual'] =
+        ($item['media'] / $somaMedias) * 100;
 
-        $valorReceber =
-            ($item['media'] / $somaMedias)
-            * $valorTotal;
-
-        $item['percentual'] = $percentual;
-        $item['valor'] = $valorReceber;
-    }
+    $dados[$key]['valor'] =
+        ($item['media'] / $somaMedias) * $valorTotal;
+}
 }
 
 ?>
