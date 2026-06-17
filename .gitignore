@@ -52,7 +52,7 @@ node_modules/
 # Arquivos de upload
 uploads/
 public/uploads/
-
+Pesquisa.docx
 # Arquivos de configuração local
 config.local.php
 database.local.php
