@@ -91,7 +91,7 @@ $stmt = $db->getResultFromQuery("
                                                 <select
                                                     name="respostas[<?= $row['id'] ?>]"
                                                     class="form-select mt-2"
-                                                    required>
+                                                    >
 
                                                     <option value="">
                                                         Selecione uma opção

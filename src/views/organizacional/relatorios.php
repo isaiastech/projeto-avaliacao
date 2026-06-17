@@ -30,7 +30,7 @@ $db = new Database();
 $sqlResumo = "
 SELECT
     setor,
-    COUNT(*) total_respostas,
+    COUNT(NULLIF(TRIM(resposta), '')) total_respostas,
     ROUND(AVG(CAST(resposta AS UNSIGNED)),2) media,
     SUM(CASE WHEN resposta='1' THEN 1 ELSE 0 END) sempre,
     SUM(CASE WHEN resposta='2' THEN 1 ELSE 0 END) frequencia,

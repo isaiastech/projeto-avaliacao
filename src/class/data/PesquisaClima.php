@@ -26,19 +26,12 @@ class PesquisaClima
         $erros[] = 'Nenhuma resposta enviada.';
     }
 
-    foreach ($dados['respostas'] as $pergunta => $resposta) {
-
-        if ($resposta === '') {
-            $erros[] = "A pergunta {$pergunta} não foi respondida.";
-        }
-    }
-
     return $erros;
 }
     /**
      * Salva respostas
      */
-   public function salvar(array $dados, ?int $usuarioId = null): bool
+ public function salvar(array $dados, ?int $usuarioId = null): bool
 {
     $sql = "
         INSERT INTO respostas_clima
@@ -56,13 +49,19 @@ class PesquisaClima
 
     foreach ($dados['respostas'] as $perguntaId => $resposta) {
 
+        $resposta = trim($resposta);
+
+        if ($resposta === '') {
+            $resposta = null;
+        }
+
         $this->db->execute(
             $sql,
             [
                 $usuarioId,
                 $dados['setor'],
                 (int)$perguntaId,
-                trim($resposta)
+                $resposta
             ]
         );
     }
