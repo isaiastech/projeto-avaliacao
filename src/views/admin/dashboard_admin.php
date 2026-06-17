@@ -111,7 +111,6 @@ $totalUsers = $db->getResultFromQuery(
 <body>
 
     <!-- NAVBAR -->
-
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
 
         <div class="container-fluid">
@@ -204,6 +203,16 @@ $totalUsers = $db->getResultFromQuery(
                         <h5>Aguardando Liberação</h5>
                     </div>
                 </div>
+                
+            </div>
+            <div class="col-md-3">
+                <div class="card card-dashboard bg-secondary text-white">
+                    <div class="card-body text-center">
+                        <h1>Pesquisa </h1>
+                        <a href="/views/organizacional/" class="btn btn-success">Lançar Pesquisa</a>
+                    </div>
+                </div>
+                
             </div>
 
         </div>
