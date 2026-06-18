@@ -29,19 +29,45 @@ $db = new Database();
 
 $sqlResumo = "
 SELECT
-    setor,
-    COUNT(NULLIF(TRIM(resposta), '')) total_respostas,
-    ROUND(AVG(CAST(resposta AS UNSIGNED)),2) media,
-    SUM(CASE WHEN resposta='1' THEN 1 ELSE 0 END) sempre,
-    SUM(CASE WHEN resposta='2' THEN 1 ELSE 0 END) frequencia,
-    SUM(CASE WHEN resposta='3' THEN 1 ELSE 0 END) raramente,
-    SUM(CASE WHEN resposta='4' THEN 1 ELSE 0 END) nunca
-FROM respostas_clima
-GROUP BY setor
-ORDER BY setor
+    r.setor,
+    COUNT(r.id) total_respostas,
+    ROUND(AVG(CAST(r.resposta AS UNSIGNED)),2) media,
+    SUM(CASE WHEN r.resposta='1' THEN 1 ELSE 0 END) sempre,
+    SUM(CASE WHEN r.resposta='2' THEN 1 ELSE 0 END) frequencia,
+    SUM(CASE WHEN r.resposta='3' THEN 1 ELSE 0 END) raramente,
+    SUM(CASE WHEN r.resposta='4' THEN 1 ELSE 0 END) nunca
+FROM respostas_clima r
+INNER JOIN perguntas p
+    ON p.id = r.pergunta_id
+WHERE p.tipo <> 'aberta'
+GROUP BY r.setor
+ORDER BY r.setor
 ";
 
 $resumo = $db->getResultFromQuery($sqlResumo);
+
+$sqlBlocos = "
+SELECT
+    p.bloco,
+    COUNT(r.id) total_respostas,
+    ROUND(
+        AVG(
+            CASE
+                WHEN p.id IN (16,17,20)
+                    THEN (5 - CAST(r.resposta AS UNSIGNED))
+                ELSE CAST(r.resposta AS UNSIGNED)
+            END
+        ),
+    2) AS media
+FROM perguntas p
+INNER JOIN respostas_clima r
+    ON r.pergunta_id = p.id
+WHERE p.tipo <> 'aberta'
+GROUP BY p.bloco
+ORDER BY p.bloco;
+";
+
+$blocos = $db->getResultFromQuery($sqlBlocos);
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +102,7 @@ SELECT
 FROM perguntas p
 LEFT JOIN respostas_clima r
     ON r.pergunta_id = p.id
+WHERE p.tipo <> 'aberta'
 GROUP BY p.id, p.pergunta
 ORDER BY p.id
 ";
@@ -188,7 +215,81 @@ $perguntas = $db->getResultFromQuery($sqlPerguntas);
 
         </div>
 
+</div>
+<div class="card shadow border-0 mb-4">
+
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">
+            Resumo por Bloco
+        </h4>
     </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Bloco</th>
+                        <th>Total Respostas</th>
+                        <th>Média</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                <?php while($row = $blocos->fetch_assoc()): ?>
+
+                    <?php
+
+                    $media = (float)$row['media'];
+
+                    if ($media <= 1.50) {
+                          $status = 'Excelente';
+                          $cor = 'success';
+                      } elseif ($media <= 2.50) {
+                          $status = 'Bom';
+                          $cor = 'primary';
+                      } elseif ($media <= 3.50) {
+                          $status = 'Atenção';
+                          $cor = 'warning';
+                      } else {
+                          $status = 'Crítico';
+                          $cor = 'danger';
+                      }
+
+                    ?>
+
+                    <tr>
+
+                        <td><?= htmlspecialchars($row['bloco']) ?></td>
+
+                        <td><?= $row['total_respostas'] ?></td>
+
+                        <td><?= number_format($media, 2, ',', '.') ?></td>
+
+                        <td>
+                            <span class="badge bg-<?= $cor ?>">
+                                <?= $status ?>
+                            </span>
+                        </td>
+
+                    </tr>
+
+                <?php endwhile; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="card shadow border-0 mt-4">
 
     <div class="card-header bg-secondary text-white">
@@ -316,25 +417,24 @@ $perguntas = $db->getResultFromQuery($sqlPerguntas);
                         $media = $row['media'];
 
                         if ($media <= 1.5) {
-                            $status = 'Excelente';
+                            $status = 'Predomínio de Sempre';
                             $cor = 'success';
                         } elseif ($media <= 2.5) {
-                            $status = 'Bom';
+                            $status = 'Predomínio de com Frequência';
                             $cor = 'primary';
                         } elseif ($media <= 3.5) {
-                            $status = 'Atenção';
+                            $status = 'Predomínio de Raramente';
                             $cor = 'warning';
                         } else {
-                            $status = 'Crítico';
+                            $status = 'Predomínio de Nunca';
                             $cor = 'danger';
                         }
-
                         ?>
-
                         <tr>
 
                            <td>
-                            <?= htmlspecialchars($row['pergunta']) ?>
+                              <strong><?= $row['id'] ?>.</strong>
+                              <?= htmlspecialchars($row['pergunta']) ?>
                           </td>
 
                             <td>
@@ -366,18 +466,53 @@ $perguntas = $db->getResultFromQuery($sqlPerguntas);
         </div>
 
     </div>
+<div class="card shadow border-0 mt-4">
 
-    <div class="alert alert-info mt-4">
+    <div class="card-header bg-secondary text-white">
+        <h4 class="mb-0">
+            Interpretação das Médias
+        </h4>
+    </div>
 
-        <h5>Interpretação dos Resultados</h5>
+    <div class="card-body">
 
-        <ul class="mb-0">
-            <li><strong>1,00 a 1,50</strong> → Excelente</li>
-            <li><strong>1,51 a 2,50</strong> → Bom</li>
-            <li><strong>2,51 a 3,50</strong> → Atenção</li>
-            <li><strong>3,51 a 4,00</strong> → Crítico</li>
-        </ul>
+        <table class="table table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Faixa</th>
+                    <th>Interpretação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>1,00 até 1,50</td>
+                    <td><span class="badge bg-success">Excelente</span></td>
+                </tr>
+
+                <tr>
+                    <td>1,51 até 2,50</td>
+                    <td><span class="badge bg-primary">Bom</span></td>
+                </tr>
+
+                <tr>
+                    <td>2,51 até 3,50</td>
+                    <td><span class="badge bg-warning text-dark">Atenção</span></td>
+                </tr>
+
+                <tr>
+                    <td>3,51 até 4,00</td>
+                    <td><span class="badge bg-danger">Crítico</span></td>
+                </tr>
+
+            </tbody>
+
+        </table>
 
     </div>
+
+</div>
 
 </div>

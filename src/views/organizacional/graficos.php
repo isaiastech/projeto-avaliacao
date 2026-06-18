@@ -28,13 +28,22 @@ $db = new Database();
 */
 
 $sqlSetor = "
-    SELECT
-        setor,
-        ROUND(AVG(CAST(resposta AS UNSIGNED)),2) AS media
-    FROM respostas_clima
-    WHERE resposta REGEXP '^[1-4]$'
-    GROUP BY setor
-    ORDER BY setor
+SELECT
+    r.setor,
+    ROUND(
+        AVG(
+            CASE
+                WHEN p.id IN (16,17,20)
+                    THEN (5 - CAST(r.resposta AS UNSIGNED))
+                ELSE CAST(r.resposta AS UNSIGNED)
+            END
+        ),2
+    ) AS media
+FROM respostas_clima r
+INNER JOIN perguntas p ON p.id = r.pergunta_id
+WHERE p.tipo <> 'aberta'
+GROUP BY r.setor
+ORDER BY r.setor
 ";
 
 $resultSetor = $db->getResultFromQuery($sqlSetor);
@@ -54,13 +63,24 @@ while ($row = $resultSetor->fetch_assoc()) {
 */
 
 $sqlPergunta = "
-    SELECT
-        pergunta_id,
-        ROUND(AVG(CAST(resposta AS UNSIGNED)),2) AS media
-    FROM respostas_clima
-    WHERE resposta REGEXP '^[1-4]$'
-    GROUP BY pergunta_id
-    ORDER BY pergunta_id
+SELECT
+    p.id,
+    CONCAT(p.id, '. ', LEFT(p.pergunta, 40)) AS pergunta,
+    ROUND(
+        AVG(
+            CASE
+                WHEN p.id IN (16,17,20)
+                    THEN (5 - CAST(r.resposta AS UNSIGNED))
+                ELSE CAST(r.resposta AS UNSIGNED)
+            END
+        ),
+    2) AS media
+FROM respostas_clima r
+INNER JOIN perguntas p
+    ON p.id = r.pergunta_id
+WHERE p.tipo <> 'aberta'
+GROUP BY p.id, p.pergunta
+ORDER BY p.id
 ";
 
 $resultPergunta = $db->getResultFromQuery($sqlPergunta);
@@ -69,8 +89,38 @@ $perguntas = [];
 $mediasPergunta = [];
 
 while ($row = $resultPergunta->fetch_assoc()) {
-    $perguntas[] = 'Pergunta ' . $row['pergunta_id'];
+    $perguntas[] = $row['pergunta'];
     $mediasPergunta[] = (float)$row['media'];
+}
+
+$sqlBloco = "
+SELECT
+    p.bloco,
+    ROUND(
+        AVG(
+            CASE
+                WHEN p.id IN (16,17,20)
+                    THEN (5 - CAST(r.resposta AS UNSIGNED))
+                ELSE CAST(r.resposta AS UNSIGNED)
+            END
+        ),
+    2) AS media
+FROM respostas_clima r
+INNER JOIN perguntas p
+    ON p.id = r.pergunta_id
+WHERE p.tipo <> 'aberta'
+GROUP BY p.bloco
+ORDER BY p.bloco
+";
+
+$resultBloco = $db->getResultFromQuery($sqlBloco);
+
+$blocos = [];
+$mediasBloco = [];
+
+while ($row = $resultBloco->fetch_assoc()) {
+    $blocos[] = $row['bloco'];
+    $mediasBloco[] = (float)$row['media'];
 }
 
 /*
@@ -120,6 +170,16 @@ $totalRespostas = $resultTotal->fetch_assoc()['total'] ?? 0;
 
     </div>
 
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-info text-white">
+        Média por Bloco
+    </div>
+
+    <div class="card-body">
+        <canvas id="graficoBlocos"></canvas>
+    </div>
+</div>
+
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-success text-white">
             Média das Respostas por Setor
@@ -159,6 +219,10 @@ if (window.graficoSetorObj) {
     window.graficoSetorObj.destroy();
 }
 
+if (window.graficoBlocoObj) {
+    window.graficoBlocoObj.destroy();
+}
+
 if (window.graficoPerguntaObj) {
     window.graficoPerguntaObj.destroy();
 }
@@ -194,18 +258,37 @@ window.graficoSetorObj = new Chart(
     }
 );
 
+
+window.graficoBlocoObj = new Chart(
+    document.getElementById('graficoBlocos'),
+    {
+        type: 'bar',
+        data: {
+            labels: <?= json_encode($blocos) ?>,
+            datasets: [{
+                label: 'Média por Bloco',
+                data: <?= json_encode($mediasBloco) ?>,
+                backgroundColor: ['#0d6efd','#198754','#ffc107','#dc3545','#20c997']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, max: 4 } }
+        }
+    }
+);
+
 window.graficoPerguntaObj = new Chart(
     document.getElementById('graficoPerguntas'),
     {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: <?= json_encode($perguntas) ?>,
             datasets: [{
                 label: 'Média por Pergunta',
                 data: <?= json_encode($mediasPergunta) ?>,
-                borderColor: '#0d6efd',
-                backgroundColor: '#0d6efd',
-                tension: 0.3
+                backgroundColor: '#0d6efd'
             }]
         },
         options: {
