@@ -30,17 +30,15 @@ $db = new Database();
 $sqlSetor = "
 SELECT
     r.setor,
-    ROUND(
-        AVG(
-            CASE
-                WHEN p.id IN (16,17,20)
-                    THEN (5 - CAST(r.resposta AS UNSIGNED))
-                ELSE CAST(r.resposta AS UNSIGNED)
-            END
-        ),2
-    ) AS media
+    COUNT(r.id) total_respostas,
+    ROUND(AVG(CAST(r.resposta AS UNSIGNED)),2) media,
+    SUM(CASE WHEN r.resposta='1' THEN 1 ELSE 0 END) sempre,
+    SUM(CASE WHEN r.resposta='2' THEN 1 ELSE 0 END) frequencia,
+    SUM(CASE WHEN r.resposta='3' THEN 1 ELSE 0 END) raramente,
+    SUM(CASE WHEN r.resposta='4' THEN 1 ELSE 0 END) nunca
 FROM respostas_clima r
-INNER JOIN perguntas p ON p.id = r.pergunta_id
+INNER JOIN perguntas p
+    ON p.id = r.pergunta_id
 WHERE p.tipo <> 'aberta'
 GROUP BY r.setor
 ORDER BY r.setor
