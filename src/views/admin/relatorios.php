@@ -20,8 +20,20 @@ use class\data\Database;
 
 $db = new Database();
 
-$mes = $_GET['mes'] ?? date('m');
-$ano = $_GET['ano'] ?? date('Y');
+$mesAtual = (int) date('m');
+$anoAtual = (int) date('Y');
+
+// Define o mês padrão como o mês anterior
+if ($mesAtual == 1) {
+    $mesPadrao = 12;
+    $anoPadrao = $anoAtual - 1;
+} else {
+    $mesPadrao = $mesAtual - 1;
+    $anoPadrao = $anoAtual;
+}
+
+$mes = $_GET['mes'] ?? $mesPadrao;
+$ano = $_GET['ano'] ?? $anoPadrao;
 // ==========================================
 // TOTAL DE AVALIADORES
 // ==========================================

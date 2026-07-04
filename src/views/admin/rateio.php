@@ -20,7 +20,11 @@ use class\data\Database;
 
 $db = new Database();
 
-$mes = $_GET['mes'] ?? date('m');
+$mesAtual = (int) date('m');
+$mesPadrao = $mesAtual == 1 ? 12 : $mesAtual - 1;
+
+$mes = $_GET['mes'] ?? $mesPadrao;
+$ano = $_GET['ano'] ?? ($mesAtual == 1 ? date('Y') - 1 : date('Y'));
 $ano = $_GET['ano'] ?? date('Y');
 
 $valorTotal = 0;
@@ -39,29 +43,31 @@ $valorTotal = (float) $valorTotal;
 
     $valorTotal = (float) $valorTotal;
 
-    $sql = "
-    SELECT
-        u.id,
-        u.nome,
-        ROUND(AVG(an.nota),2) AS media
+   $sql = "
+      SELECT
+          u.id,
+          u.nome,
+          ROUND(AVG(an.nota),2) AS media
 
-    FROM usuarios u
+      FROM usuarios u
 
-    LEFT JOIN avaliacoes a
-        ON a.avaliado_id = u.id
-        AND a.mes = ?
-        AND a.ano = ?
+      LEFT JOIN avaliacoes a
+          ON a.avaliado_id = u.id
+          AND a.mes = ?
+          AND a.ano = ?
 
-    LEFT JOIN avaliacao_notas an
-        ON an.avaliacao_id = a.id
+      LEFT JOIN avaliacao_notas an
+          ON an.avaliacao_id = a.id
 
-    GROUP BY u.id, u.nome
+      WHERE u.ativo = 1
+        AND u.nivel NOT IN ('admin', 'gerente')
 
-    HAVING media IS NOT NULL
+      GROUP BY u.id, u.nome
 
-    ORDER BY media DESC
-    ";
+      HAVING media IS NOT NULL
 
+      ORDER BY media DESC
+      ";
     $ranking = $db->getResultFromQuery(
         $sql,
         [
