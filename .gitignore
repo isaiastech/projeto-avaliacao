@@ -36,7 +36,7 @@ Thumbs.db
 *.sql
 *.zip
 *.tar.gz
-
+!db/schema.sql
 # Arquivos temporários
 *.tmp
 
