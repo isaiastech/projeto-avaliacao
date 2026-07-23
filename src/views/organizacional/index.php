@@ -109,9 +109,9 @@ $stmt =  $db->getResultFromQuery("
      </div>
 </div>
 </nav>
-<div class="row mb-4">
+<div class="row mb-3 mt-3">
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <a href="#" class="text-decoration-none"
            onclick="carregarPagina('formulario.php')">
 
@@ -125,28 +125,41 @@ $stmt =  $db->getResultFromQuery("
         </a>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <a href="#" class="text-decoration-none"
            onclick="carregarPagina('relatorios.php')">
 
             <div class="card shadow-sm text-center">
                 <div class="card-body">
                     <i class="fas fa-file-alt fa-3x text-success"></i>
-                    <h5 class="mt-3">Relatórios</h5>
+                    <h5 class="mt-3">Pesquisa Organizacional</h5>
+                </div>
+            </div>
+
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="#" class="text-decoration-none"
+           onclick="carregarPagina('relatorioCafe.php')">
+
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-file-alt fa-3x text-success"></i>
+                    <h5 class="mt-3">Relatórios Café</h5>
                 </div>
             </div>
 
         </a>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <a href="#" class="text-decoration-none"
            onclick="carregarPagina('graficos.php')">
 
             <div class="card shadow-sm text-center">
                 <div class="card-body">
                     <i class="fas fa-chart-pie fa-3x text-warning"></i>
-                    <h5 class="mt-3">Gráficos</h5>
+                    <h5 class="mt-3">Gráficos Organizacional</h5>
                 </div>
             </div>
 
