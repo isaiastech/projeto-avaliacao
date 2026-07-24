@@ -1,0 +1,155 @@
+ body {
+   background: linear-gradient(135deg, #f4f6f9 0%, #eef1f7 100%);
+   color: #343a40;
+ }
+
+ /* Navbar */
+ .navbar {
+   box-shadow: 0 3px 12px rgba(0, 0, 0, .15);
+ }
+
+ /* Cards principais */
+ .card {
+   border: none;
+   border-radius: 16px;
+   overflow: hidden;
+   box-shadow: 0 5px 20px rgba(0, 0, 0, .07) !important;
+ }
+
+ .card-header {
+   border: none;
+   padding: 16px 20px;
+   font-weight: 600;
+ }
+
+ /* Cabeçalho dos cards */
+ .card-header.bg-primary {
+   background: linear-gradient(135deg, #250352, #4b1680) !important;
+ }
+
+ /* Campos */
+ .form-control {
+   border-radius: 10px;
+   border: 1px solid #dee2e6;
+   padding: 12px 15px;
+   height: auto;
+   transition: all .25s ease;
+ }
+
+ .form-control:focus {
+   border-color: #6f42c1;
+   box-shadow: 0 0 0 .2rem rgba(111, 66, 193, .15);
+ }
+
+ .form-group label {
+   font-weight: 600;
+   color: #495057;
+ }
+
+ /* Cards individuais de avaliação */
+ .card-body>.card {
+   border: 1px solid #e9ecef;
+   transition: all .25s ease;
+ }
+
+ .card-body>.card:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 8px 20px rgba(37, 3, 82, .10) !important;
+ }
+
+ .card-body>.card>.card-header {
+   background: #f8f9fa;
+   color: #250352;
+ }
+
+ /* Opções de avaliação */
+ .custom-control-label {
+   cursor: pointer;
+   padding: 10px 15px 10px 35px;
+   border-radius: 10px;
+   transition: all .2s ease;
+   width: 100%;
+ }
+
+ .custom-control-label:hover {
+   background: #f3eff8;
+ }
+
+ /* Radio selecionado */
+ .custom-control-input:checked~.custom-control-label {
+   background: #250352;
+   color: #fff;
+   font-weight: 600;
+ }
+
+ /* Alert */
+ .alert {
+   border: none;
+   border-radius: 12px;
+ }
+
+ /* Botão */
+ .btn-primary {
+   background: linear-gradient(135deg, #250352, #4b1680);
+   border: none;
+   border-radius: 12px;
+   font-weight: 600;
+   padding: 12px 30px;
+   box-shadow: 0 5px 15px rgba(37, 3, 82, .25);
+   transition: all .25s ease;
+ }
+
+ .btn-primary:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 8px 20px rgba(37, 3, 82, .35);
+   background: linear-gradient(135deg, #35076e, #5c2095);
+ }
+
+ /* Título */
+ h1 {
+   color: #250352;
+ }
+
+ /* Footer */
+ footer.bg-body-tertiary {
+   background-color: #250352 !important;
+ }
+
+ /* Responsivo */
+ @media (max-width: 767px) {
+
+   .container {
+     padding-left: 15px;
+     padding-right: 15px;
+   }
+
+   h1 {
+     font-size: 1.7rem;
+   }
+
+   .card-body>.card {
+     margin-bottom: 15px !important;
+   }
+
+   .custom-control-label {
+     padding: 12px 15px 12px 35px;
+   }
+
+   .btn-primary {
+     width: 100%;
+   }
+ }
+
+ .form-control.is-valid {
+   border-color: #28a745;
+   background-image: none;
+ }
+
+ .form-control.is-invalid {
+   border-color: #dc3545;
+   background-image: none;
+ }
+
+ .custom-control-input.is-invalid~.custom-control-label {
+   color: #dc3545;
+ }
