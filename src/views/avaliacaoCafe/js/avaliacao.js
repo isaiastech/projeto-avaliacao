@@ -1,27 +1,78 @@
 $(document).ready(function () {
 
-  // ==========================================
-  // MÁSCARA DINÂMICA DE TELEFONE
-  // ==========================================
-  $('#fone').mask('(00) 0000-0000#', {
+$(document).ready(function () {
 
-    onKeyPress: function (value, event, field, options) {
+    // ==========================================
+    // MÁSCARA DINÂMICA DE TELEFONE
+    // ==========================================
+    $('#fone').mask('(00) 0000-0000', {
 
-      let telefone = value.replace(/\D/g, '');
+        onKeyPress: function (value, event, field, options) {
 
-      if (telefone.length > 10) {
+            // Remove tudo que não for número
+            let telefone = value.replace(/\D/g, '');
 
-        $(field).mask('(00) 00000-0000', options);
+            // Primeiro dígito após o DDD
+            // Exemplo:
+            // (49) 99999-9999
+            //       ^
+            //       primeiro dígito = 9
+            let primeiroDigito = telefone.charAt(2);
 
-      } else {
+            // Se o número começar com 9 após o DDD,
+            // muda para máscara de celular
+            if (primeiroDigito === '9') {
 
-        $(field).mask('(00) 0000-0000', options);
+                $(field).mask('(00) 00000-0000', options);
 
-      }
+            } else {
 
-    }
+                // Caso contrário, telefone fixo
+                $(field).mask('(00) 0000-0000', options);
 
-  });
+            }
+
+        }
+
+    });
+
+
+    // ==========================================
+    // VALIDAÇÃO DO TELEFONE
+    // ==========================================
+    $('#fone').on('blur', function () {
+
+        let telefone = $(this).val().replace(/\D/g, '');
+
+        // Telefone não é obrigatório
+        if (telefone.length === 0) {
+
+            $(this).removeClass('is-valid is-invalid');
+
+            return;
+
+        }
+
+        // Telefone válido:
+        // 10 dígitos = fixo
+        // 11 dígitos = celular
+        if (telefone.length === 10 || telefone.length === 11) {
+
+            $(this)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+
+        } else {
+
+            $(this)
+                .removeClass('is-valid')
+                .addClass('is-invalid');
+
+        }
+
+    });
+
+});
 
   // ==========================================
   // CAPITALIZAÇÃO DO NOME DO HÓSPEDE

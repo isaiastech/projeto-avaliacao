@@ -157,9 +157,9 @@ $opcoes = [
 <!-- TELEFONE -->
 <div class="form-group col-md-6">
   <label for="fone">📱 Telefone</label>
-  <input type="tel" class="form-control" id="fone" name="fone" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric">
+  <input type="tel" class="form-control" id="fone" name="fone" placeholder="(00)00000-0000" maxlength="15" inputmode="numeric" autocomplete="tel">
 </div>
-<!-- E-MAIL -->
+  <!-- E-MAIL -->
   <div class="form-group col-md-6">
     <label for="email"> 📧 E-mail</label>
     <input type="email" class="form-control" id="email" name="email" placeholder="exemplo@email.com" autocomplete="email">
@@ -236,7 +236,7 @@ $opcoes = [
   </footer>
 
 <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <!-- jQuery Mask Plugin -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -248,7 +248,7 @@ $opcoes = [
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZ9t27NXFoaoaPmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"></script>
 
 <!-- JavaScript da avaliação -->
-<script src="js/avaliacao.js"></script>
+<script src="js/avaliacao.js?v=<?= filemtime('js/avaliacao.js') ?>"></script>
 
 </body>
 </html>
