@@ -18,6 +18,7 @@ use class\data\Database;
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
     header('Location: index.php');
+
     exit;
 
 }
@@ -42,6 +43,7 @@ if (
         'Sessão inválida. Atualize a página e tente novamente.';
 
     header('Location: index.php');
+
     exit;
 
 }
@@ -57,23 +59,28 @@ $hospede = trim(
     $_POST['hospede'] ?? ''
 );
 
+
 $apto = preg_replace(
     '/[^0-9]/',
     '',
     $_POST['apto'] ?? ''
 );
 
+
 $fone = trim(
     $_POST['fone'] ?? ''
 );
+
 
 $email = trim(
     $_POST['email'] ?? ''
 );
 
+
 $data_avaliacao = trim(
     $_POST['data_avaliacao'] ?? ''
 );
+
 
 $sugestoes = trim(
     $_POST['sugestoes'] ?? ''
@@ -87,22 +94,39 @@ $sugestoes = trim(
 */
 
 $itens = [
+
     'cafe_manha',
+
     'colchao',
+
     'travesseiro',
+
     'limpeza',
+
     'frigobar',
+
     'chuveiro_aquecimento',
+
     'chuveiro_ducha',
+
     'ar_condicionado',
+
     'roupa_cama',
+
     'internet',
+
     'bar',
+
     'atendimento',
+
     'reserva',
+
     'recepcao',
+
     'camareira',
+
     'garcom'
+
 ];
 
 
@@ -113,10 +137,15 @@ $itens = [
 */
 
 $opcoesValidas = [
+
     'otimo',
+
     'bom',
+
     'satisfatorio',
+
     'ruim'
+
 ];
 
 
@@ -132,6 +161,7 @@ if ($hospede === '') {
         'Informe seu nome completo.';
 
     header('Location: index.php');
+
     exit;
 
 }
@@ -149,9 +179,11 @@ if ($apto === '') {
         'Informe o número do apartamento.';
 
     header('Location: index.php');
+
     exit;
 
 }
+
 
 if (!preg_match('/^[0-9]+$/', $apto)) {
 
@@ -159,6 +191,7 @@ if (!preg_match('/^[0-9]+$/', $apto)) {
         'O apartamento deve conter apenas números.';
 
     header('Location: index.php');
+
     exit;
 
 }
@@ -176,6 +209,34 @@ if ($data_avaliacao === '') {
         'Informe a data da avaliação.';
 
     header('Location: index.php');
+
+    exit;
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| VALIDAÇÃO DO FORMATO DA DATA
+|--------------------------------------------------------------------------
+*/
+
+$dataValida = DateTime::createFromFormat(
+    'Y-m-d',
+    $data_avaliacao
+);
+
+
+if (
+    !$dataValida ||
+    $dataValida->format('Y-m-d') !== $data_avaliacao
+) {
+
+    $_SESSION['mensagem_erro'] =
+        'A data da avaliação é inválida.';
+
+    header('Location: index.php');
+
     exit;
 
 }
@@ -189,13 +250,17 @@ if ($data_avaliacao === '') {
 
 if (
     !empty($email) &&
-    !filter_var($email, FILTER_VALIDATE_EMAIL)
+    !filter_var(
+        $email,
+        FILTER_VALIDATE_EMAIL
+    )
 ) {
 
     $_SESSION['mensagem_erro'] =
         'Informe um e-mail válido.';
 
     header('Location: index.php');
+
     exit;
 
 }
@@ -209,19 +274,29 @@ if (
 
 $avaliacoes = [];
 
+
 foreach ($itens as $item) {
 
     $valor = $_POST[$item] ?? '';
 
-    if (!in_array($valor, $opcoesValidas, true)) {
+
+    if (
+        !in_array(
+            $valor,
+            $opcoesValidas,
+            true
+        )
+    ) {
 
         $_SESSION['mensagem_erro'] =
             'Por favor, avalie todos os itens.';
 
         header('Location: index.php');
+
         exit;
 
     }
+
 
     $avaliacoes[$item] = $valor;
 
@@ -244,7 +319,7 @@ try {
     | INSERT
     |--------------------------------------------------------------------------
     |
-    | 22 COLUNAS
+    | A tabela avaliacoes_hospedes possui:
     |
     | 1  hospede
     | 2  apto
@@ -269,57 +344,110 @@ try {
     | 21 garcom
     | 22 sugestoes
     |
+    | A coluna id é AUTO_INCREMENT.
+    | A coluna criado_em possui DEFAULT CURRENT_TIMESTAMP.
+    |
     |--------------------------------------------------------------------------
     */
 
     $sql = "
+
         INSERT INTO avaliacoes_hospedes (
+
             hospede,
+
             apto,
+
             fone,
+
             email,
+
             data_avaliacao,
+
             cafe_manha,
+
             colchao,
+
             travesseiro,
+
             limpeza,
+
             frigobar,
+
             chuveiro_aquecimento,
+
             chuveiro_ducha,
+
             ar_condicionado,
+
             roupa_cama,
+
             internet,
+
             bar,
+
             atendimento,
+
             reserva,
+
             recepcao,
+
             camareira,
+
             garcom,
+
             sugestoes
-        ) VALUES (
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?
+
         )
+
+        VALUES (
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?,
+
+            ?
+
+        )
+
     ";
 
 
@@ -328,35 +456,58 @@ try {
     | PARÂMETROS
     |--------------------------------------------------------------------------
     |
-    | EXATAMENTE 22 PARÂMETROS
+    | Exatamente 22 parâmetros para os 22 "?"
     |
     */
 
     $params = [
+
         $hospede,
+
         $apto,
+
         $fone,
+
         $email,
+
         $data_avaliacao,
 
+
         $avaliacoes['cafe_manha'],
+
         $avaliacoes['colchao'],
+
         $avaliacoes['travesseiro'],
+
         $avaliacoes['limpeza'],
+
         $avaliacoes['frigobar'],
+
         $avaliacoes['chuveiro_aquecimento'],
+
         $avaliacoes['chuveiro_ducha'],
+
         $avaliacoes['ar_condicionado'],
+
         $avaliacoes['roupa_cama'],
+
         $avaliacoes['internet'],
+
         $avaliacoes['bar'],
+
         $avaliacoes['atendimento'],
+
         $avaliacoes['reserva'],
+
         $avaliacoes['recepcao'],
+
         $avaliacoes['camareira'],
+
         $avaliacoes['garcom'],
 
+
         $sugestoes
+
     ];
 
 
@@ -366,20 +517,28 @@ try {
     |--------------------------------------------------------------------------
     */
 
-    $database->execute(
+    $resultado = $database->execute(
+
         $sql,
+
         $params
+
     );
 
 
     /*
     |--------------------------------------------------------------------------
-    | SUCESSO
+    | VERIFICAÇÃO
     |--------------------------------------------------------------------------
     */
 
-    $_SESSION['mensagem_sucesso'] =
-        'Obrigado! Sua avaliação foi registrada com sucesso.';
+    if (!$resultado) {
+
+        throw new Exception(
+            'Não foi possível inserir a avaliação no banco de dados.'
+        );
+
+    }
 
 
     /*
@@ -389,6 +548,7 @@ try {
     */
 
     $_SESSION['csrf_token'] =
+
         bin2hex(
             random_bytes(32)
         );
@@ -396,39 +556,70 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | REDIRECIONA
+    | MENSAGEM DE SUCESSO
     |--------------------------------------------------------------------------
     */
 
-    header('Location: index.php');
+    $_SESSION['mensagem_sucesso'] =
+
+        'Obrigado! Sua avaliação foi registrada com sucesso.';
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECIONA PARA AGRADECIMENTO
+    |--------------------------------------------------------------------------
+    */
+
+    header(
+        'Location: agradecimento.php'
+    );
+
     exit;
 
 
 } catch (Throwable $e) {
 
+
     /*
     |--------------------------------------------------------------------------
-    | LOG
+    | REGISTRA ERRO NO LOG
     |--------------------------------------------------------------------------
+    |
+    | O hóspede não verá detalhes internos do banco.
+    |
     */
 
     error_log(
+
         'Erro ao salvar avaliação do hóspede: ' .
+
         $e->getMessage()
+
     );
 
 
     /*
     |--------------------------------------------------------------------------
-    | MENSAGEM
+    | MENSAGEM PARA O USUÁRIO
     |--------------------------------------------------------------------------
     */
 
     $_SESSION['mensagem_erro'] =
+
         'Não foi possível registrar sua avaliação. Tente novamente.';
 
 
-    header('Location: index.php');
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECIONA PARA O FORMULÁRIO
+    |--------------------------------------------------------------------------
+    */
+
+    header(
+        'Location: index.php'
+    );
+
     exit;
 
 }
